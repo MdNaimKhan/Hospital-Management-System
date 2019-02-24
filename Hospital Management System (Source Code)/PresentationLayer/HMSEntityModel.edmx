@@ -1,0 +1,679 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblBIlling">
+          <Key>
+            <PropertyRef Name="bill_id" />
+          </Key>
+          <Property Name="bill_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="bill_amount" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="mode_of_payment" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="card_number" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="tblDepartment">
+          <Key>
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="department_id" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="department_name" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPatientDiagnosis">
+          <Key>
+            <PropertyRef Name="diagnosis_id" />
+          </Key>
+          <Property Name="diagnosis_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="symptoms" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="diagnosis_provided" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="administered_by" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="date_of_diagnosis" Type="date" Nullable="false" />
+          <Property Name="follow_up_required" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="date_of_followup" Type="date" />
+          <Property Name="bill" Type="bigint" Nullable="false" />
+          <Property Name="patient_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPatientDtls">
+          <Key>
+            <PropertyRef Name="patient_id" />
+          </Key>
+          <Property Name="patient_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="date_of_birth" Type="date" Nullable="false" />
+          <Property Name="phone_number" Type="numeric" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="email_id" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="state" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="insurance_plan" Type="varchar" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPhysician">
+          <Key>
+            <PropertyRef Name="physician_id" />
+          </Key>
+          <Property Name="physician_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="department_id" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="educational_qualification" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="years_of_experience" Type="int" Nullable="false" />
+          <Property Name="state" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="plan_id" Type="varchar" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblPlan">
+          <Key>
+            <PropertyRef Name="plan_id" />
+          </Key>
+          <Property Name="plan_id" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="plan_name" Type="varchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblState">
+          <Key>
+            <PropertyRef Name="state_id" />
+          </Key>
+          <Property Name="state_id" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblPatientDiagnosis_tblBIlling">
+          <End Role="tblBIlling" Type="Self.tblBIlling" Multiplicity="1" />
+          <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBIlling">
+              <PropertyRef Name="bill_id" />
+            </Principal>
+            <Dependent Role="tblPatientDiagnosis">
+              <PropertyRef Name="bill" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDiagnosis_tblPatientDtls">
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="1" />
+          <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPatientDtls">
+              <PropertyRef Name="patient_id" />
+            </Principal>
+            <Dependent Role="tblPatientDiagnosis">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDtls_tblPlan">
+          <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPlan">
+              <PropertyRef Name="plan_id" />
+            </Principal>
+            <Dependent Role="tblPatientDtls">
+              <PropertyRef Name="insurance_plan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDtls_tblState">
+          <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblState">
+              <PropertyRef Name="state_id" />
+            </Principal>
+            <Dependent Role="tblPatientDtls">
+              <PropertyRef Name="state" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblDepartment">
+          <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblDepartment">
+              <PropertyRef Name="department_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblPlan">
+          <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPlan">
+              <PropertyRef Name="plan_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="plan_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblState">
+          <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblState">
+              <PropertyRef Name="state_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="state" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_aggregate_patient_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_aggregate_physician_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SpPhysicianSearch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="state" Type="varchar" Mode="In" />
+          <Parameter Name="plan_id" Type="varchar" Mode="In" />
+          <Parameter Name="department_id" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SpViewPatient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patient_id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SpViewPatientonFNameandLName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="first_name" Type="varchar" Mode="In" />
+          <Parameter Name="last_name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_Get_ID_Value" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="table_name" Type="varchar" Mode="In" />
+          <Parameter Name="id" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="usp_InsertBillInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="bill_amount" Type="numeric" Mode="In" />
+          <Parameter Name="mode_of_payment" Type="varchar" Mode="In" />
+          <Parameter Name="card_number" Type="varchar" Mode="In" />
+          <Parameter Name="billID" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="usp_InsertPatientDtls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="DOB" Type="date" Mode="In" />
+          <Parameter Name="PhoneNumber" Type="numeric" Mode="In" />
+          <Parameter Name="EmailID" Type="varchar" Mode="In" />
+          <Parameter Name="StateID" Type="varchar" Mode="In" />
+          <Parameter Name="InsurancePlan" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="HMSModelStoreContainer">
+          <EntitySet Name="tblBIlling" EntityType="Self.tblBIlling" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPatientDiagnosis" EntityType="Self.tblPatientDiagnosis" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPatientDtls" EntityType="Self.tblPatientDtls" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPhysician" EntityType="Self.tblPhysician" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPlan" EntityType="Self.tblPlan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblState" EntityType="Self.tblState" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblPatientDiagnosis_tblBIlling" Association="Self.FK_tblPatientDiagnosis_tblBIlling">
+            <End Role="tblBIlling" EntitySet="tblBIlling" />
+            <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDiagnosis_tblPatientDtls" Association="Self.FK_tblPatientDiagnosis_tblPatientDtls">
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+            <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDtls_tblPlan" Association="Self.FK_tblPatientDtls_tblPlan">
+            <End Role="tblPlan" EntitySet="tblPlan" />
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDtls_tblState" Association="Self.FK_tblPatientDtls_tblState">
+            <End Role="tblState" EntitySet="tblState" />
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblDepartment" Association="Self.FK_tblPhysician_tblDepartment">
+            <End Role="tblDepartment" EntitySet="tblDepartment" />
+            <End Role="tblPhysician" EntitySet="tblPhysician" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblPlan" Association="Self.FK_tblPhysician_tblPlan">
+            <End Role="tblPlan" EntitySet="tblPlan" />
+            <End Role="tblPhysician" EntitySet="tblPhysician" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblState" Association="Self.FK_tblPhysician_tblState">
+            <End Role="tblState" EntitySet="tblState" />
+            <End Role="tblPhysician" EntitySet="tblPhysician" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblBIlling">
+          <Key>
+            <PropertyRef Name="bill_id" />
+          </Key>
+          <Property Name="bill_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bill_amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="mode_of_payment" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="card_number" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblPatientDiagnosis" Relationship="Self.FK_tblPatientDiagnosis_tblBIlling" FromRole="tblBIlling" ToRole="tblPatientDiagnosis" />
+        </EntityType>
+        <EntityType Name="tblDepartment">
+          <Key>
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="department_id" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="department_name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPhysicians" Relationship="Self.FK_tblPhysician_tblDepartment" FromRole="tblDepartment" ToRole="tblPhysician" />
+        </EntityType>
+        <EntityType Name="tblPatientDiagnosi">
+          <Key>
+            <PropertyRef Name="diagnosis_id" />
+          </Key>
+          <Property Name="diagnosis_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="symptoms" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="diagnosis_provided" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="administered_by" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="date_of_diagnosis" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="follow_up_required" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="date_of_followup" Type="DateTime" Precision="0" />
+          <Property Name="bill" Type="Int64" Nullable="false" />
+          <Property Name="patient_id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="tblBIlling" Relationship="Self.FK_tblPatientDiagnosis_tblBIlling" FromRole="tblPatientDiagnosis" ToRole="tblBIlling" />
+          <NavigationProperty Name="tblPatientDtl" Relationship="Self.FK_tblPatientDiagnosis_tblPatientDtls" FromRole="tblPatientDiagnosis" ToRole="tblPatientDtls" />
+        </EntityType>
+        <EntityType Name="tblPatientDtl">
+          <Key>
+            <PropertyRef Name="patient_id" />
+          </Key>
+          <Property Name="patient_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="date_of_birth" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="phone_number" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="email_id" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="state" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="insurance_plan" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPatientDiagnosis" Relationship="Self.FK_tblPatientDiagnosis_tblPatientDtls" FromRole="tblPatientDtls" ToRole="tblPatientDiagnosis" />
+          <NavigationProperty Name="tblPlan" Relationship="Self.FK_tblPatientDtls_tblPlan" FromRole="tblPatientDtls" ToRole="tblPlan" />
+          <NavigationProperty Name="tblState" Relationship="Self.FK_tblPatientDtls_tblState" FromRole="tblPatientDtls" ToRole="tblState" />
+        </EntityType>
+        <EntityType Name="tblPhysician">
+          <Key>
+            <PropertyRef Name="physician_id" />
+          </Key>
+          <Property Name="physician_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="department_id" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="educational_qualification" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="years_of_experience" Type="Int32" Nullable="false" />
+          <Property Name="state" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="plan_id" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblDepartment" Relationship="Self.FK_tblPhysician_tblDepartment" FromRole="tblPhysician" ToRole="tblDepartment" />
+          <NavigationProperty Name="tblPlan" Relationship="Self.FK_tblPhysician_tblPlan" FromRole="tblPhysician" ToRole="tblPlan" />
+          <NavigationProperty Name="tblState" Relationship="Self.FK_tblPhysician_tblState" FromRole="tblPhysician" ToRole="tblState" />
+        </EntityType>
+        <EntityType Name="tblPlan">
+          <Key>
+            <PropertyRef Name="plan_id" />
+          </Key>
+          <Property Name="plan_id" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="plan_name" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPatientDtls" Relationship="Self.FK_tblPatientDtls_tblPlan" FromRole="tblPlan" ToRole="tblPatientDtls" />
+          <NavigationProperty Name="tblPhysicians" Relationship="Self.FK_tblPhysician_tblPlan" FromRole="tblPlan" ToRole="tblPhysician" />
+        </EntityType>
+        <EntityType Name="tblState">
+          <Key>
+            <PropertyRef Name="state_id" />
+          </Key>
+          <Property Name="state_id" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblPatientDtls" Relationship="Self.FK_tblPatientDtls_tblState" FromRole="tblState" ToRole="tblPatientDtls" />
+          <NavigationProperty Name="tblPhysicians" Relationship="Self.FK_tblPhysician_tblState" FromRole="tblState" ToRole="tblPhysician" />
+        </EntityType>
+        <Association Name="FK_tblPatientDiagnosis_tblBIlling">
+          <End Role="tblBIlling" Type="Self.tblBIlling" Multiplicity="1" />
+          <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBIlling">
+              <PropertyRef Name="bill_id" />
+            </Principal>
+            <Dependent Role="tblPatientDiagnosis">
+              <PropertyRef Name="bill" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblDepartment">
+          <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblDepartment">
+              <PropertyRef Name="department_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDiagnosis_tblPatientDtls">
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtl" Multiplicity="1" />
+          <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPatientDtls">
+              <PropertyRef Name="patient_id" />
+            </Principal>
+            <Dependent Role="tblPatientDiagnosis">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDtls_tblPlan">
+          <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPlan">
+              <PropertyRef Name="plan_id" />
+            </Principal>
+            <Dependent Role="tblPatientDtls">
+              <PropertyRef Name="insurance_plan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPatientDtls_tblState">
+          <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+          <End Role="tblPatientDtls" Type="Self.tblPatientDtl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblState">
+              <PropertyRef Name="state_id" />
+            </Principal>
+            <Dependent Role="tblPatientDtls">
+              <PropertyRef Name="state" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblPlan">
+          <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPlan">
+              <PropertyRef Name="plan_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="plan_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPhysician_tblState">
+          <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+          <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblState">
+              <PropertyRef Name="state_id" />
+            </Principal>
+            <Dependent Role="tblPhysician">
+              <PropertyRef Name="state" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblBIllings" EntityType="Self.tblBIlling" />
+          <EntitySet Name="tblDepartments" EntityType="Self.tblDepartment" />
+          <EntitySet Name="tblPatientDiagnosis" EntityType="Self.tblPatientDiagnosi" />
+          <EntitySet Name="tblPatientDtls" EntityType="Self.tblPatientDtl" />
+          <EntitySet Name="tblPhysicians" EntityType="Self.tblPhysician" />
+          <EntitySet Name="tblPlans" EntityType="Self.tblPlan" />
+          <EntitySet Name="tblStates" EntityType="Self.tblState" />
+          <AssociationSet Name="FK_tblPatientDiagnosis_tblBIlling" Association="Self.FK_tblPatientDiagnosis_tblBIlling">
+            <End Role="tblBIlling" EntitySet="tblBIllings" />
+            <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblDepartment" Association="Self.FK_tblPhysician_tblDepartment">
+            <End Role="tblDepartment" EntitySet="tblDepartments" />
+            <End Role="tblPhysician" EntitySet="tblPhysicians" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDiagnosis_tblPatientDtls" Association="Self.FK_tblPatientDiagnosis_tblPatientDtls">
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+            <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDtls_tblPlan" Association="Self.FK_tblPatientDtls_tblPlan">
+            <End Role="tblPlan" EntitySet="tblPlans" />
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPatientDtls_tblState" Association="Self.FK_tblPatientDtls_tblState">
+            <End Role="tblState" EntitySet="tblStates" />
+            <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblPlan" Association="Self.FK_tblPhysician_tblPlan">
+            <End Role="tblPlan" EntitySet="tblPlans" />
+            <End Role="tblPhysician" EntitySet="tblPhysicians" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPhysician_tblState" Association="Self.FK_tblPhysician_tblState">
+            <End Role="tblState" EntitySet="tblStates" />
+            <End Role="tblPhysician" EntitySet="tblPhysicians" />
+          </AssociationSet>
+          <FunctionImport Name="SpPhysicianSearch" ReturnType="Collection(HMSModel.SpPhysicianSearch_Result)">
+            <Parameter Name="state" Mode="In" Type="String" />
+            <Parameter Name="plan_id" Mode="In" Type="String" />
+            <Parameter Name="department_id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SpViewPatient" ReturnType="Collection(HMSModel.SpViewPatient_Result)">
+          <Parameter Name="patient_id" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SpViewPatientonFNameandLName" ReturnType="Collection(HMSModel.SpViewPatientonFNameandLName_Result)">
+            <Parameter Name="first_name" Mode="In" Type="String" />
+            <Parameter Name="last_name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_InsertBillInfo">
+            <Parameter Name="bill_amount" Mode="In" Type="Decimal" />
+            <Parameter Name="mode_of_payment" Mode="In" Type="String" />
+            <Parameter Name="card_number" Mode="In" Type="String" />
+            <Parameter Name="billID" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="usp_InsertPatientDtls">
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="DOB" Mode="In" Type="DateTime" />
+            <Parameter Name="PhoneNumber" Mode="In" Type="Decimal" />
+            <Parameter Name="EmailID" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="String" />
+            <Parameter Name="InsurancePlan" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_Get_Primary_ID">
+          <Parameter Name="table_name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_Get_ID_Value">
+            <Parameter Name="table_name" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="sp_aggregate_patient_count" ReturnType="Collection(Int32)" />
+          <FunctionImport Name="sp_aggregate_physician_count" ReturnType="Collection(Int32)" />
+        </EntityContainer>
+        <ComplexType Name="SpPhysicianSearch_Result">
+          <Property Type="Int64" Name="physician_id" Nullable="false" />
+          <Property Type="String" Name="first_name" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="last_name" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="department_id" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="educational_qualification" Nullable="false" MaxLength="30" />
+          <Property Type="Int32" Name="years_of_experience" Nullable="false" />
+          <Property Type="String" Name="department_name" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="plan_id" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="state" Nullable="false" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="SpViewPatient_Result">
+          <Property Type="Int64" Name="patient_id" Nullable="false" />
+          <Property Type="String" Name="first_name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="last_name" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="date_of_diagnosis" Nullable="false" />
+          <Property Type="Int64" Name="physician_id" Nullable="false" />
+          <Property Type="String" Name="symptoms" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="diagnosis" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="date_of_followup" Nullable="true" />
+          <Property Type="Decimal" Name="bill_amount" Nullable="false" Precision="18" Scale="0" />
+        </ComplexType>
+        <ComplexType Name="SpViewPatientonFNameandLName_Result">
+          <Property Type="Int64" Name="patient_id" Nullable="false" />
+          <Property Type="String" Name="first_name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="last_name" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="date_of_diagnosis" Nullable="false" />
+          <Property Type="Int64" Name="physician_id" Nullable="false" />
+          <Property Type="String" Name="symptoms" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="diagnosis" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="date_of_followup" Nullable="true" />
+          <Property Type="Decimal" Name="bill_amount" Nullable="false" Precision="18" Scale="0" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HMSModelStoreContainer" CdmEntityContainer="HMSEntities">
+          <EntitySetMapping Name="tblBIllings">
+            <EntityTypeMapping TypeName="HMSModel.tblBIlling">
+              <MappingFragment StoreEntitySet="tblBIlling">
+                <ScalarProperty Name="bill_id" ColumnName="bill_id" />
+                <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+                <ScalarProperty Name="mode_of_payment" ColumnName="mode_of_payment" />
+                <ScalarProperty Name="card_number" ColumnName="card_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblDepartments">
+            <EntityTypeMapping TypeName="HMSModel.tblDepartment">
+              <MappingFragment StoreEntitySet="tblDepartment">
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="department_name" ColumnName="department_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPatientDiagnosis">
+            <EntityTypeMapping TypeName="HMSModel.tblPatientDiagnosi">
+              <MappingFragment StoreEntitySet="tblPatientDiagnosis">
+                <ScalarProperty Name="diagnosis_id" ColumnName="diagnosis_id" />
+                <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+                <ScalarProperty Name="diagnosis_provided" ColumnName="diagnosis_provided" />
+                <ScalarProperty Name="administered_by" ColumnName="administered_by" />
+                <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+                <ScalarProperty Name="follow_up_required" ColumnName="follow_up_required" />
+                <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+                <ScalarProperty Name="bill" ColumnName="bill" />
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPatientDtls">
+            <EntityTypeMapping TypeName="HMSModel.tblPatientDtl">
+              <MappingFragment StoreEntitySet="tblPatientDtls">
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
+                <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+                <ScalarProperty Name="email_id" ColumnName="email_id" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="insurance_plan" ColumnName="insurance_plan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="HMSModel.tblPatientDtl">
+              <ModificationFunctionMapping>
+                <InsertFunction FunctionName="HMSModel.Store.usp_InsertPatientDtls" >
+                  <ScalarProperty Name="insurance_plan" ParameterName="InsurancePlan" />
+                  <ScalarProperty Name="state" ParameterName="StateID" />
+                  <ScalarProperty Name="email_id" ParameterName="EmailID" />
+                  <ScalarProperty Name="phone_number" ParameterName="PhoneNumber" />
+                  <ScalarProperty Name="date_of_birth" ParameterName="DOB" />
+                  <ScalarProperty Name="last_name" ParameterName="LastName" />
+                  <ScalarProperty Name="first_name" ParameterName="FirstName" />
+                </InsertFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPhysicians">
+            <EntityTypeMapping TypeName="HMSModel.tblPhysician">
+              <MappingFragment StoreEntitySet="tblPhysician">
+                <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="educational_qualification" ColumnName="educational_qualification" />
+                <ScalarProperty Name="years_of_experience" ColumnName="years_of_experience" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPlans">
+            <EntityTypeMapping TypeName="HMSModel.tblPlan">
+              <MappingFragment StoreEntitySet="tblPlan">
+                <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+                <ScalarProperty Name="plan_name" ColumnName="plan_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblStates">
+            <EntityTypeMapping TypeName="HMSModel.tblState">
+              <MappingFragment StoreEntitySet="tblState">
+                <ScalarProperty Name="state_id" ColumnName="state_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SpPhysicianSearch" FunctionName="HMSModel.Store.SpPhysicianSearch">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HMSModel.SpPhysicianSearch_Result">
+                <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="educational_qualification" ColumnName="educational_qualification" />
+                <ScalarProperty Name="years_of_experience" ColumnName="years_of_experience" />
+                <ScalarProperty Name="department_name" ColumnName="department_name" />
+                <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+                <ScalarProperty Name="state" ColumnName="state" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SpViewPatient" FunctionName="HMSModel.Store.SpViewPatient">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HMSModel.SpViewPatient_Result">
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+                <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+                <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+                <ScalarProperty Name="diagnosis" ColumnName="diagnosis" />
+                <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+                <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SpViewPatientonFNameandLName" FunctionName="HMSModel.Store.SpViewPatientonFNameandLName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HMSModel.SpViewPatientonFNameandLName_Result">
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+                <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+                <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+                <ScalarProperty Name="diagnosis" ColumnName="diagnosis" />
+                <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+                <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_InsertBillInfo" FunctionName="HMSModel.Store.usp_InsertBillInfo" />
+          <FunctionImportMapping FunctionImportName="usp_InsertPatientDtls" FunctionName="HMSModel.Store.usp_InsertPatientDtls" />
+          <FunctionImportMapping FunctionImportName="usp_Get_ID_Value" FunctionName="HMSModel.Store.usp_Get_ID_Value" />
+          <FunctionImportMapping FunctionImportName="sp_aggregate_patient_count" FunctionName="HMSModel.Store.sp_aggregate_patient_count" />
+          <FunctionImportMapping FunctionImportName="sp_aggregate_physician_count" FunctionName="HMSModel.Store.sp_aggregate_physician_count" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

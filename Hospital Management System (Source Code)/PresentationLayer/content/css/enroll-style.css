@@ -1,0 +1,8 @@
+﻿body{
+    background:inherit;
+}
+table {
+    padding: 30px 0;
+    margin-left: 25%;
+    border: 3px solid #bdc3c7;
+}

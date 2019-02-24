@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="tblBIlling">
+    <Key>
+      <PropertyRef Name="bill_id" />
+    </Key>
+    <Property Name="bill_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="bill_amount" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="mode_of_payment" Type="varchar" MaxLength="6" Nullable="false" />
+    <Property Name="card_number" Type="varchar" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="tblDepartment">
+    <Key>
+      <PropertyRef Name="department_id" />
+    </Key>
+    <Property Name="department_id" Type="varchar" MaxLength="4" Nullable="false" />
+    <Property Name="department_name" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPatientDiagnosis">
+    <Key>
+      <PropertyRef Name="diagnosis_id" />
+    </Key>
+    <Property Name="diagnosis_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="symptoms" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="diagnosis_provided" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="administered_by" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="date_of_diagnosis" Type="date" Nullable="false" />
+    <Property Name="follow_up_required" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="date_of_followup" Type="date" />
+    <Property Name="bill" Type="bigint" Nullable="false" />
+    <Property Name="patient_id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPatientDtls">
+    <Key>
+      <PropertyRef Name="patient_id" />
+    </Key>
+    <Property Name="patient_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="first_name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="last_name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="date_of_birth" Type="date" Nullable="false" />
+    <Property Name="phone_number" Type="numeric" Precision="10" Scale="0" Nullable="false" />
+    <Property Name="email_id" Type="varchar" MaxLength="40" Nullable="false" />
+    <Property Name="state" Type="varchar" MaxLength="2" Nullable="false" />
+    <Property Name="insurance_plan" Type="varchar" MaxLength="4" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPhysician">
+    <Key>
+      <PropertyRef Name="physician_id" />
+    </Key>
+    <Property Name="physician_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="first_name" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="last_name" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="department_id" Type="varchar" MaxLength="4" Nullable="false" />
+    <Property Name="educational_qualification" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="years_of_experience" Type="int" Nullable="false" />
+    <Property Name="state" Type="varchar" MaxLength="2" Nullable="false" />
+    <Property Name="plan_id" Type="varchar" MaxLength="4" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPlan">
+    <Key>
+      <PropertyRef Name="plan_id" />
+    </Key>
+    <Property Name="plan_id" Type="varchar" MaxLength="4" Nullable="false" />
+    <Property Name="plan_name" Type="varchar" MaxLength="6" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblState">
+    <Key>
+      <PropertyRef Name="state_id" />
+    </Key>
+    <Property Name="state_id" Type="varchar" MaxLength="2" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_tblPatientDiagnosis_tblBIlling">
+    <End Role="tblBIlling" Type="Self.tblBIlling" Multiplicity="1" />
+    <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblBIlling">
+        <PropertyRef Name="bill_id" />
+      </Principal>
+      <Dependent Role="tblPatientDiagnosis">
+        <PropertyRef Name="bill" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPatientDiagnosis_tblPatientDtls">
+    <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="1" />
+    <End Role="tblPatientDiagnosis" Type="Self.tblPatientDiagnosis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPatientDtls">
+        <PropertyRef Name="patient_id" />
+      </Principal>
+      <Dependent Role="tblPatientDiagnosis">
+        <PropertyRef Name="patient_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPatientDtls_tblPlan">
+    <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+    <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPlan">
+        <PropertyRef Name="plan_id" />
+      </Principal>
+      <Dependent Role="tblPatientDtls">
+        <PropertyRef Name="insurance_plan" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPatientDtls_tblState">
+    <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+    <End Role="tblPatientDtls" Type="Self.tblPatientDtls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblState">
+        <PropertyRef Name="state_id" />
+      </Principal>
+      <Dependent Role="tblPatientDtls">
+        <PropertyRef Name="state" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPhysician_tblDepartment">
+    <End Role="tblDepartment" Type="Self.tblDepartment" Multiplicity="1" />
+    <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblDepartment">
+        <PropertyRef Name="department_id" />
+      </Principal>
+      <Dependent Role="tblPhysician">
+        <PropertyRef Name="department_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPhysician_tblPlan">
+    <End Role="tblPlan" Type="Self.tblPlan" Multiplicity="1" />
+    <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPlan">
+        <PropertyRef Name="plan_id" />
+      </Principal>
+      <Dependent Role="tblPhysician">
+        <PropertyRef Name="plan_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPhysician_tblState">
+    <End Role="tblState" Type="Self.tblState" Multiplicity="1" />
+    <End Role="tblPhysician" Type="Self.tblPhysician" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblState">
+        <PropertyRef Name="state_id" />
+      </Principal>
+      <Dependent Role="tblPhysician">
+        <PropertyRef Name="state" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="sp_aggregate_patient_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_aggregate_physician_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SpPhysicianSearch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="state" Type="varchar" Mode="In" />
+    <Parameter Name="plan_id" Type="varchar" Mode="In" />
+    <Parameter Name="department_id" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SpViewPatient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="patient_id" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="SpViewPatientonFNameandLName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="first_name" Type="varchar" Mode="In" />
+    <Parameter Name="last_name" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="usp_Get_ID_Value" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="table_name" Type="varchar" Mode="In" />
+    <Parameter Name="id" Type="bigint" Mode="InOut" />
+  </Function>
+  <Function Name="usp_InsertBillInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="bill_amount" Type="numeric" Mode="In" />
+    <Parameter Name="mode_of_payment" Type="varchar" Mode="In" />
+    <Parameter Name="card_number" Type="varchar" Mode="In" />
+    <Parameter Name="billID" Type="bigint" Mode="InOut" />
+  </Function>
+  <Function Name="usp_InsertPatientDtls" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="FirstName" Type="varchar" Mode="In" />
+    <Parameter Name="LastName" Type="varchar" Mode="In" />
+    <Parameter Name="DOB" Type="date" Mode="In" />
+    <Parameter Name="PhoneNumber" Type="numeric" Mode="In" />
+    <Parameter Name="EmailID" Type="varchar" Mode="In" />
+    <Parameter Name="StateID" Type="varchar" Mode="In" />
+    <Parameter Name="InsurancePlan" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="HMSModelStoreContainer">
+    <EntitySet Name="tblBIlling" EntityType="Self.tblBIlling" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPatientDiagnosis" EntityType="Self.tblPatientDiagnosis" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPatientDtls" EntityType="Self.tblPatientDtls" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPhysician" EntityType="Self.tblPhysician" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPlan" EntityType="Self.tblPlan" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblState" EntityType="Self.tblState" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_tblPatientDiagnosis_tblBIlling" Association="Self.FK_tblPatientDiagnosis_tblBIlling">
+      <End Role="tblBIlling" EntitySet="tblBIlling" />
+      <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPatientDiagnosis_tblPatientDtls" Association="Self.FK_tblPatientDiagnosis_tblPatientDtls">
+      <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+      <End Role="tblPatientDiagnosis" EntitySet="tblPatientDiagnosis" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPatientDtls_tblPlan" Association="Self.FK_tblPatientDtls_tblPlan">
+      <End Role="tblPlan" EntitySet="tblPlan" />
+      <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPatientDtls_tblState" Association="Self.FK_tblPatientDtls_tblState">
+      <End Role="tblState" EntitySet="tblState" />
+      <End Role="tblPatientDtls" EntitySet="tblPatientDtls" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPhysician_tblDepartment" Association="Self.FK_tblPhysician_tblDepartment">
+      <End Role="tblDepartment" EntitySet="tblDepartment" />
+      <End Role="tblPhysician" EntitySet="tblPhysician" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPhysician_tblPlan" Association="Self.FK_tblPhysician_tblPlan">
+      <End Role="tblPlan" EntitySet="tblPlan" />
+      <End Role="tblPhysician" EntitySet="tblPhysician" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPhysician_tblState" Association="Self.FK_tblPhysician_tblState">
+      <End Role="tblState" EntitySet="tblState" />
+      <End Role="tblPhysician" EntitySet="tblPhysician" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

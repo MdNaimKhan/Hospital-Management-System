@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HMSModelStoreContainer" CdmEntityContainer="HMSEntities">
+    <EntitySetMapping Name="tblBIllings">
+      <EntityTypeMapping TypeName="HMSModel.tblBIlling">
+        <MappingFragment StoreEntitySet="tblBIlling">
+          <ScalarProperty Name="bill_id" ColumnName="bill_id" />
+          <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+          <ScalarProperty Name="mode_of_payment" ColumnName="mode_of_payment" />
+          <ScalarProperty Name="card_number" ColumnName="card_number" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblDepartments">
+      <EntityTypeMapping TypeName="HMSModel.tblDepartment">
+        <MappingFragment StoreEntitySet="tblDepartment">
+          <ScalarProperty Name="department_id" ColumnName="department_id" />
+          <ScalarProperty Name="department_name" ColumnName="department_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPatientDiagnosis">
+      <EntityTypeMapping TypeName="HMSModel.tblPatientDiagnosi">
+        <MappingFragment StoreEntitySet="tblPatientDiagnosis">
+          <ScalarProperty Name="diagnosis_id" ColumnName="diagnosis_id" />
+          <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+          <ScalarProperty Name="diagnosis_provided" ColumnName="diagnosis_provided" />
+          <ScalarProperty Name="administered_by" ColumnName="administered_by" />
+          <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+          <ScalarProperty Name="follow_up_required" ColumnName="follow_up_required" />
+          <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+          <ScalarProperty Name="bill" ColumnName="bill" />
+          <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPatientDtls">
+      <EntityTypeMapping TypeName="HMSModel.tblPatientDtl">
+        <MappingFragment StoreEntitySet="tblPatientDtls">
+          <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
+          <ScalarProperty Name="phone_number" ColumnName="phone_number" />
+          <ScalarProperty Name="email_id" ColumnName="email_id" />
+          <ScalarProperty Name="state" ColumnName="state" />
+          <ScalarProperty Name="insurance_plan" ColumnName="insurance_plan" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="HMSModel.tblPatientDtl">
+        <ModificationFunctionMapping>
+          <InsertFunction FunctionName="HMSModel.Store.usp_InsertPatientDtls">
+            <ScalarProperty Name="insurance_plan" ParameterName="InsurancePlan" />
+            <ScalarProperty Name="state" ParameterName="StateID" />
+            <ScalarProperty Name="email_id" ParameterName="EmailID" />
+            <ScalarProperty Name="phone_number" ParameterName="PhoneNumber" />
+            <ScalarProperty Name="date_of_birth" ParameterName="DOB" />
+            <ScalarProperty Name="last_name" ParameterName="LastName" />
+            <ScalarProperty Name="first_name" ParameterName="FirstName" />
+          </InsertFunction>
+        </ModificationFunctionMapping>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPhysicians">
+      <EntityTypeMapping TypeName="HMSModel.tblPhysician">
+        <MappingFragment StoreEntitySet="tblPhysician">
+          <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="department_id" ColumnName="department_id" />
+          <ScalarProperty Name="educational_qualification" ColumnName="educational_qualification" />
+          <ScalarProperty Name="years_of_experience" ColumnName="years_of_experience" />
+          <ScalarProperty Name="state" ColumnName="state" />
+          <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPlans">
+      <EntityTypeMapping TypeName="HMSModel.tblPlan">
+        <MappingFragment StoreEntitySet="tblPlan">
+          <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+          <ScalarProperty Name="plan_name" ColumnName="plan_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblStates">
+      <EntityTypeMapping TypeName="HMSModel.tblState">
+        <MappingFragment StoreEntitySet="tblState">
+          <ScalarProperty Name="state_id" ColumnName="state_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="SpPhysicianSearch" FunctionName="HMSModel.Store.SpPhysicianSearch">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HMSModel.SpPhysicianSearch_Result">
+          <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="department_id" ColumnName="department_id" />
+          <ScalarProperty Name="educational_qualification" ColumnName="educational_qualification" />
+          <ScalarProperty Name="years_of_experience" ColumnName="years_of_experience" />
+          <ScalarProperty Name="department_name" ColumnName="department_name" />
+          <ScalarProperty Name="plan_id" ColumnName="plan_id" />
+          <ScalarProperty Name="state" ColumnName="state" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SpViewPatient" FunctionName="HMSModel.Store.SpViewPatient">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HMSModel.SpViewPatient_Result">
+          <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+          <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+          <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+          <ScalarProperty Name="diagnosis" ColumnName="diagnosis" />
+          <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+          <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SpViewPatientonFNameandLName" FunctionName="HMSModel.Store.SpViewPatientonFNameandLName">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="HMSModel.SpViewPatientonFNameandLName_Result">
+          <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="date_of_diagnosis" ColumnName="date_of_diagnosis" />
+          <ScalarProperty Name="physician_id" ColumnName="physician_id" />
+          <ScalarProperty Name="symptoms" ColumnName="symptoms" />
+          <ScalarProperty Name="diagnosis" ColumnName="diagnosis" />
+          <ScalarProperty Name="date_of_followup" ColumnName="date_of_followup" />
+          <ScalarProperty Name="bill_amount" ColumnName="bill_amount" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="usp_InsertBillInfo" FunctionName="HMSModel.Store.usp_InsertBillInfo" />
+    <FunctionImportMapping FunctionImportName="usp_InsertPatientDtls" FunctionName="HMSModel.Store.usp_InsertPatientDtls" />
+    <FunctionImportMapping FunctionImportName="usp_Get_ID_Value" FunctionName="HMSModel.Store.usp_Get_ID_Value" />
+    <FunctionImportMapping FunctionImportName="sp_aggregate_patient_count" FunctionName="HMSModel.Store.sp_aggregate_patient_count" />
+    <FunctionImportMapping FunctionImportName="sp_aggregate_physician_count" FunctionName="HMSModel.Store.sp_aggregate_physician_count" />
+  </EntityContainerMapping>
+</Mapping>
